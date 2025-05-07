@@ -7,6 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 public class RobotContainer {
-
+  private final Climber climber = new Climber();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
 
@@ -47,12 +48,15 @@ public class RobotContainer {
       Commands.race(shooter.runShooterWExit, intake.runIntake).andThen((shooter.pullBackUntilInSensorTripped))
       //intake.runIntake.alongWith(shooter.runShooter).until(shooter::isOutLimitSensorTripped).andThen(shooter.pullBack)
     );
+
     // m_driverController.b()
     // .whileTrue(
     //   intake.runIntake.alongWith(shooter.runShooter).until(shooter::isOutLimitSensorTripped).andThen((shooter.pullBack).until(shooter::isInLimitSensorTripped))
     // );
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
+    m_driverController.rightTrigger(.1).whileTrue(climber.getDeployCommand(m_driverController::getRightTriggerAxis));
+    m_driverController.leftTrigger(.1).whileTrue(climber.getPullBackCommand(m_driverController::getLeftTriggerAxis));
   }
 
   /**
