@@ -23,7 +23,7 @@ public class Climber extends SubsystemBase{
 
         private SparkMax climberMotor;
         private SparkMaxConfig climberConfig;
-        private SparkAbsoluteEncoder climberEncoder;
+        public SparkAbsoluteEncoder climberEncoder;
     public Climber (){
         climberMotor = new SparkMax((21), MotorType.kBrushless);
         climberConfig = new SparkMaxConfig();

@@ -14,12 +14,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.subsystems.Leds;
 
 
 public class RobotContainer {
   private final Climber climber = new Climber();
   private final Intake intake = new Intake();
   private final Shooter shooter = new Shooter();
+  private final Leds leds = new Leds(climber);
+  
 
   // The robot's subsystems and commands are defined here...
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -48,6 +51,7 @@ public class RobotContainer {
       Commands.race(shooter.runShooterWExit, intake.runIntake).andThen((shooter.pullBackUntilInSensorTripped))
       //intake.runIntake.alongWith(shooter.runShooter).until(shooter::isOutLimitSensorTripped).andThen(shooter.pullBack)
     );
+    shooter.isEtherLimitSensorTrippedTrigger.whileTrue(leds.runPattern(leds.greenBase));
 
     // m_driverController.b()
     // .whileTrue(
@@ -55,8 +59,8 @@ public class RobotContainer {
     // );
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.rightTrigger(.1).whileTrue(climber.getDeployCommand(m_driverController::getRightTriggerAxis));
-    m_driverController.leftTrigger(.1).whileTrue(climber.getPullBackCommand(m_driverController::getLeftTriggerAxis));
+    m_driverController.rightTrigger(.1).whileTrue(climber.getDeployCommand(m_driverController::getRightTriggerAxis).alongWith(leds.runPattern(leds.climbingProgressMaskpattern)));
+    m_driverController.leftTrigger(.1).whileTrue(climber.getPullBackCommand(m_driverController::getLeftTriggerAxis).alongWith(leds.runPattern(leds.climbingProgressMaskpattern)));
   }
 
   /**
